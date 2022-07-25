@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //DOM: ДЗ
+
+        //Таблица умножения
+        const
+            standardBackgroundColor = 'white',
+            nonEvenBackgroundColor = '#dddddd',
+            selectedBackgroundColor = 'yellow',
+            tableSize = 10;
+
+        let 
+            table = document.createElement('table'),
+            getRowBackgroundColor = (row) => row % 2 ? nonEvenBackgroundColor : standardBackgroundColor;//возвращает цвет для строки row
+        
+        function setColors(col, row, color){
+            for(let curRow of table.rows){
+                for(let colIndex = 0; colIndex < curRow.childNodes.length; colIndex++){
+                    if(curRow.rowIndex === row || (curRow.rowIndex !== row && colIndex === col)){
+                        let cell = curRow.childNodes[colIndex];
+                        cell.style.backgroundColor = (color === null ? cell.normalColor : selectedBackgroundColor);
+                    }
+                }
+            }
+        }
+
+        //тело таблицы
+        for(let row = 0; row < tableSize; row++){//строка
+            tr = document.createElement('tr');            
+            tr.normalColor = getRowBackgroundColor(row);//запоминаем исходный цвет
+            tr.style['background-color'] = tr.normalColor;
+            table.appendChild(tr);
+            for(let col = 0; col < tableSize; col++){//столбец
+                td = document.createElement(row == 0 || col == 0 ? 'th' : 'td');
+                td.innerText = 
+                    col == 0 
+                    ? (row == 0 ? '.' : row)//шапка таблицы
+                    : (row == 0 ? col : row * col);//тело таблицы
+                td.style.border = 'groove';
+                td.style.width = '20px';
+                td.style['text-align'] = 'center';
+                td.normalColor = tr.normalColor;//запоминаем исходный цвет
+                if(row !== 0 && col !== 0){
+                    td.onmouseover = () => {setColors(col, row, selectedBackgroundColor)}
+                    td.onmouseout = () => {setColors(col, row, null)}
+                }
+                tr.appendChild(td);            
+            }
+        }
+        document.body.appendChild(table);
+    </script>
+</body>
+</html>
